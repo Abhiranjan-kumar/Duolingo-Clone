@@ -65,6 +65,30 @@ const main = async () => {
         order: 1,
         title: "Vowels",
       },
+      {
+        id: 2,
+        unitId: 1, //Unit 1(Learn the basics...)
+        order: 2,
+        title: "Nonus",
+      },
+      {
+        id: 3,
+        unitId: 1, //Unit 1(Learn the basics...)
+        order: 3,
+        title: "Nonus",
+      },
+      {
+        id: 4,
+        unitId: 1, //Unit 1(Learn the basics...)
+        order: 4,
+        title: "Nonus",
+      },
+      {
+        id: 5,
+        unitId: 1, //Unit 1(Learn the basics...)
+        order: 5,
+        title: "Nonus",
+      },
     ]);
 
     await db.insert(schema.challenges).values([
