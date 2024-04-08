@@ -108,7 +108,7 @@ const main = async () => {
         imageSrc: "man.svg",
         correct: true,
         text: "एक आदमी",
-        audioSrc: "/es_man.mp3",
+        audioSrc: "/hindi_man.mp3",
       },
       {
         id: 2,
@@ -116,7 +116,7 @@ const main = async () => {
         imageSrc: "woman.svg",
         correct: false,
         text: "एक औरत",
-        audioSrc: "/es_woman.mp3",
+        audioSrc: "/hindi_woman.mp3",
       },
       {
         id: 3,
@@ -124,7 +124,7 @@ const main = async () => {
         imageSrc: "robot.svg",
         correct: false,
         text: "एक रोबोट",
-        audioSrc: "/es_robot.mp3",
+        audioSrc: "/hindi_robot.mp3",
       },
       {
         id: 4,
@@ -132,7 +132,7 @@ const main = async () => {
         imageSrc: "child.svg",
         correct: false,
         text: "एक बच्चा",
-        audioSrc: "/es_child.mp3",
+        audioSrc: "/hindi_child.mp3",
       },
     ]);
 
