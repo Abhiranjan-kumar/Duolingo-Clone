@@ -13,14 +13,19 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useExitModal } from "@/store/use-exit-modal";
+import { useHeartsModal } from "@/store/use-hearts-modal";
 
-export const ExitModal = () => {
+export const HeartsModal = () => {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
-  const { isOpen, close } = useExitModal();
+  const { isOpen, close } = useHeartsModal();
 
   useEffect(() => setIsClient(true), []);
+
+  const onClick = () => {
+    close();
+    router.push("/store");
+  };
 
   if (!isClient) {
     return null;
@@ -32,17 +37,17 @@ export const ExitModal = () => {
         <DialogHeader>
           <div className="flex items-center w-full justify-center mb-5">
             <Image
-              src="/mascot_sad.svg"
+              src="/mascot_bad.svg"
               alt="Mascot"
               height={80}
               width={80}
             />
           </div>
           <DialogTitle className="text-center font-bold text-2xl">
-            Wait, don&apos;t go!
+            You ran out of hearts!
           </DialogTitle>
           <DialogDescription className="text-center text-base">
-            You&apos;re about to leave the lesson. Are you sure?
+            Get Pro for unlimited hearts, or purchase them in the store.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="mb-4">
@@ -51,20 +56,17 @@ export const ExitModal = () => {
               variant="primary" 
               className="w-full" 
               size="lg" 
-              onClick={close}
+              onClick={onClick}
             >
-              Keep learning
+              Get unlimited hearts
             </Button>
             <Button
-              variant="dangerOutline" 
+              variant="primaryOutline" 
               className="w-full" 
               size="lg" 
-              onClick={() => {
-                close();
-                router.push("/learn");
-              }}
+              onClick={close}
             >
-              End session
+              No thanks
             </Button>
           </div>
         </DialogFooter>

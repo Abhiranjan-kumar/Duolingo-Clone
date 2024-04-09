@@ -1,14 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { toast } from "sonner";
+import Image from "next/image";
 import Confetti from "react-confetti";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { useAudio, useWindowSize } from "react-use";
+import { useAudio, useWindowSize, useMount } from "react-use";
 
 import { reduceHearts } from "@/actions/user-progress";
-import { challengeOptions, challenges } from "@/db/schema";
+import { useHeartsModal } from "@/store/use-hearts-modal";
+import { challengeOptions, challenges, userSubscription } from "@/db/schema";
+import { usePracticeModal } from "@/store/use-practice-modal";
 import { upsertChallengeProgress } from "@/actions/challenge-progress";
 
 import { Header } from "./header";
@@ -17,7 +19,7 @@ import { Challenge } from "./challenge";
 import { ResultCard } from "./result-card";
 import { QuestionBubble } from "./question-bubble";
 
-type Props = {
+type Props ={
   initialPercentage: number;
   initialHearts: number;
   initialLessonId: number;
@@ -25,7 +27,9 @@ type Props = {
     completed: boolean;
     challengeOptions: typeof challengeOptions.$inferSelect[];
   })[];
-  userSubscription: any; // TODO: Replace with subscription DB type
+  userSubscription: typeof userSubscription.$inferSelect & {
+    isActive: boolean;
+  } | null;
 };
 
 export const Quiz = ({
@@ -35,6 +39,15 @@ export const Quiz = ({
   initialLessonChallenges,
   userSubscription,
 }: Props) => {
+  const { open: openHeartsModal } = useHeartsModal();
+  const { open: openPracticeModal } = usePracticeModal();
+
+  useMount(() => {
+    if (initialPercentage === 100) {
+      openPracticeModal();
+    }
+  });
+
   const { width, height } = useWindowSize();
 
   const router = useRouter();
@@ -54,10 +67,12 @@ export const Quiz = ({
 
   const [lessonId] = useState(initialLessonId);
   const [hearts, setHearts] = useState(initialHearts);
-  const [percentage, setPercentage] = useState(initialPercentage);
+  const [percentage, setPercentage] = useState(() => {
+    return initialPercentage === 100 ? 0 : initialPercentage;
+  });
   const [challenges] = useState(initialLessonChallenges);
   const [activeIndex, setActiveIndex] = useState(() => {
-    const uncompletedIndex = challenges.findIndex((challenge) => !challenge.completed)
+    const uncompletedIndex = challenges.findIndex((challenge) => !challenge.completed);
     return uncompletedIndex === -1 ? 0 : uncompletedIndex;
   });
 
@@ -85,6 +100,7 @@ export const Quiz = ({
       setSelectedOption(undefined);
       return;
     }
+
     if (status === "correct") {
       onNext();
       setStatus("none");
@@ -103,7 +119,7 @@ export const Quiz = ({
         upsertChallengeProgress(challenge.id)
           .then((response) => {
             if (response?.error === "hearts") {
-              console.error("Missing hearts");
+              openHeartsModal();
               return;
             }
 
@@ -116,14 +132,14 @@ export const Quiz = ({
               setHearts((prev) => Math.min(prev + 1, 5));
             }
           })
-          .catch(() => toast.error("Something went worng. Please try again."))
+          .catch(() => toast.error("Something went wrong. Please try again."))
       });
     } else {
       startTransition(() => {
         reduceHearts(challenge.id)
           .then((response) => {
             if (response?.error === "hearts") {
-              console.error("Missing hearts");
+              openHeartsModal();
               return;
             }
 
@@ -148,9 +164,9 @@ export const Quiz = ({
           height={height}
           recycle={false}
           numberOfPieces={500}
-          tweenDuration={10000} 
+          tweenDuration={10000}
         />
-         <div className="flex flex-col gap-y-4 lg:gap-y-8 max-w-lg mx-auto text-center items-center justify-center h-full">
+        <div className="flex flex-col gap-y-4 lg:gap-y-8 max-w-lg mx-auto text-center items-center justify-center h-full">
           <Image
             src="/finish.svg"
             alt="Finish"
@@ -182,14 +198,14 @@ export const Quiz = ({
         <Footer
           lessonId={lessonId}
           status="completed"
-          onCheck={() => router.push("/learn")} 
+          onCheck={() => router.push("/learn")}
         />
       </>
     );
   }
 
   const title = challenge.type === "ASSIST" 
-    ? "Select the correct meaning" 
+    ? "Select the correct meaning"
     : challenge.question;
 
   return (
@@ -199,7 +215,7 @@ export const Quiz = ({
       <Header
         hearts={hearts}
         percentage={percentage}
-        hasActiveSubscription={!!userSubscription?.isActive} 
+        hasActiveSubscription={!!userSubscription?.isActive}
       />
       <div className="flex-1">
         <div className="h-full flex items-center justify-center">
@@ -209,7 +225,7 @@ export const Quiz = ({
             </h1>
             <div>
               {challenge.type === "ASSIST" && (
-                <QuestionBubble question={challenge.question}/>
+                <QuestionBubble question={challenge.question} />
               )}
               <Challenge
                 options={options}
@@ -224,9 +240,9 @@ export const Quiz = ({
         </div>
       </div>
       <Footer
-        disabled={ pending || !selectedOption}
+        disabled={pending || !selectedOption}
         status={status}
-        onCheck={onContinue} 
+        onCheck={onContinue}
       />
     </>
   );
