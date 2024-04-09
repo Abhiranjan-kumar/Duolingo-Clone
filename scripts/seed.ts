@@ -99,36 +99,104 @@ const main = async () => {
         order: 1,
         question: 'Which one of these is the "A man"?',
       },
+      {
+        id: 2,
+        lessonId: 1, //vowels
+        type: "ASSIST",
+        order: 2,
+        question: '"A man"',
+      },
+      {
+        id: 3,
+        lessonId: 1, //vowels
+        type: "SELECT",
+        order: 3,
+        question: 'Which one of these is the "A robot"?',
+      },
     ]);
 
     await db.insert(schema.challengeOptions).values([
       {
-        id: 1,
-        challengeId: 1, // Which one of these is "A man"?
+        challengeId: 1, // Which one of these is the "A man"?
         imageSrc: "man.svg",
         correct: true,
         text: "एक आदमी",
         audioSrc: "/hindi_man.mp3",
       },
       {
-        id: 2,
-        challengeId: 1, // Which one of these is "A man"?
+        challengeId: 1,
         imageSrc: "woman.svg",
         correct: false,
         text: "एक औरत",
         audioSrc: "/hindi_woman.mp3",
       },
       {
-        id: 3,
-        challengeId: 1, // Which one of these is "A man"?
+        challengeId: 1,
         imageSrc: "robot.svg",
         correct: false,
         text: "एक रोबोट",
         audioSrc: "/hindi_robot.mp3",
       },
       {
-        id: 4,
-        challengeId: 1, // Which one of these is "A man"?
+        challengeId: 1,
+        imageSrc: "child.svg",
+        correct: false,
+        text: "एक बच्चा",
+        audioSrc: "/hindi_child.mp3",
+      },
+    ]);
+
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 2, // "A man"?
+        correct: true,
+        text: "एक आदमी",
+        audioSrc: "/hindi_man.mp3",
+      },
+      {
+        challengeId: 2,
+        correct: false,
+        text: "एक औरत",
+        audioSrc: "/hindi_woman.mp3",
+      },
+      {
+        challengeId: 2,
+        correct: false,
+        text: "एक रोबोट",
+        audioSrc: "/hindi_robot.mp3",
+      },
+      {
+        challengeId: 2,
+        correct: false,
+        text: "एक बच्चा",
+        audioSrc: "/hindi_child.mp3",
+      },
+    ]);
+
+    await db.insert(schema.challengeOptions).values([
+      {
+        challengeId: 3, // Which one of these is the "A robot"?
+        imageSrc: "man.svg",
+        correct: false,
+        text: "एक आदमी",
+        audioSrc: "/hindi_man.mp3",
+      },
+      {
+        challengeId: 3,
+        imageSrc: "woman.svg",
+        correct: false,
+        text: "एक औरत",
+        audioSrc: "/hindi_woman.mp3",
+      },
+      {
+        challengeId: 3,
+        imageSrc: "robot.svg",
+        correct: true,
+        text: "एक रोबोट",
+        audioSrc: "/hindi_robot.mp3",
+      },
+      {
+        challengeId: 3,
         imageSrc: "child.svg",
         correct: false,
         text: "एक बच्चा",
